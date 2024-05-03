@@ -6,11 +6,11 @@
 /*   By: mdoan <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:54:45 by mdoan             #+#    #+#             */
-/*   Updated: 2024/04/23 15:16:37 by mdoan            ###   ########.fr       */
+/*   Updated: 2024/04/26 17:13:59 by mdoan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "minishell.h"
 
 char	**we_split(char *str)
 {
@@ -32,11 +32,11 @@ char	**we_split(char *str)
 j'ai rajoute le s pour separateur, quand c'est = ou ;
 et si ca commence par " alors c'est un argument
 */
-
 char	*search_type(char **arr)
 {
 	char	*ty;
 	int		i;
+	int		j;
 
 	i = 0;
 	while (arr[i])
@@ -56,8 +56,8 @@ char	*search_type(char **arr)
 			ty[i] = 'd';
 		else if (*arr[i] == '|')
 			ty[i] = 'p';
-		else if (*arr[i] == '=')
-			ty[i] = 's';
+		//else if (*arr[i] == '=')
+			//ty[i] = 's';
 		else if (*arr[i] == ';')
 			ty[i] = 's';
 		else if (arr[i][0] == '\"')
@@ -67,7 +67,20 @@ char	*search_type(char **arr)
 		else if (ty[i - 1] == 'c' || ty[i - 1] == 'i' || ty[i - 1] == 'h' || ty[i - 1] == 't' || ty[i - 1] == 'd')
 			ty[i] = 'g';
 		else
-			ty[i] = 'c';
+		{
+			j = 0;
+			while (arr[i][j])
+			{
+				if (arr[i][j] == '=')
+				{
+					ty[i] = 'g';
+					break ;
+				}
+				j++;
+			}
+			if (arr[i][j] == '\0')
+				ty[i] = 'c';
+		}
 		i++;
 	}
 	return (ty);
@@ -80,9 +93,9 @@ void	print_list(t_entry *list_ch)
 		printf("Type: %c, Str: %s\n", list_ch->type, list_ch->str);
 		list_ch = list_ch->next;
 	}
-}
+}	
 
-t_entry	*list(char **arr)
+t_entry	*ft_list(char **arr)
 {
 	t_entry		*list_ch;
 	t_entry		*current;
@@ -114,92 +127,50 @@ t_entry	*list(char **arr)
 		}
 		i++;
 	}
-	print_list(list_ch);
+	//print_list(list_ch);
 	return(list_ch);
 }
 
-/*
-void	the_argus(char *str)
-{
-	char	str2[39832];
-	int		i;
-	int		k;
-	int		j;
-	int		m;
-	int		begin;
-	int		begin_value;
-	int		end_value;
-	// int		begin_name;
-	int		end_name;
-	
-	i = 0;
-	j = 0;
-	k = 0;
-	m = 0;
-	begin = -42;
 
-	printf("\n\nstr : %s\n\n", str);
-	while (str[i])
-	{
-		while (str[i] == ' ' && begin == -42)
-			i++;
-		if (str[i] == ' ' && begin != -42)
-			str2[j] = str[i];
-		else if (str[i] == '=')
-		{
-			end_name = i - 1;
-			begin = -42;
-		}
-		else if (str[i] == '"' && begin == -42)
-			begin_value = i + 1;
-		else if (str[i] == '"' && begin != -42)
-		{
-			end_value = i - 1;
-			begin = -42;
-		}
-		else
-			str2[j] = str[i];
-		i++;
-		j++;
-	}
-	ft_strlcat(str2, "\e[0;37m", 32767);
-	str2[j] = '\0';
-	printf("\n\nstr2 : %s\n\n", str2);
-}
-*/
-
-		
-/*
-arg="aa";cd $arg; cd $arg
-*/
 void	open_prompt(char **env)
 {
+	int		i;
 	char	*str;
 	char	**arr;
 	char	**repos;
-	int		i;
 	char	*street;
-	
+	t_box	*list = NULL;
+	t_entry *list_str = NULL;
+	t_entry	*listf= NULL;
+	t_entry *listp = NULL;
+	t_entry *exec = NULL;
+	char	**table;
+	table = create_env(env);
+	if (table == NULL)
+	{
+		printf("vide\n");
+		return ;
+	}
+	i = 0;
+	while (table[i])
+	{
+		list = list_var(list, table[i]);
+		i++;
+	}
 	i = 0;
 	while (1)
 	{
-
-
-		// the_argus(str);
-
-		
 		repos = create_repos();
 		street = list_repos(repos);
 		ft_strlcat(street, "\e[0;37m", 32767);
 		str = readline(street);
 		add_history(str);
-		if (ft_strncmp(str, "exit", ft_strlen(str)) == 0) 
+
+		if (strcmp(str, "e") == 0) 
 			break ;
-
-	
 		arr = we_split(str);
-		list(arr);
-
+		list_str = ft_list(arr);
+		print_list(list_str);
 		// Créer un nouveau processus pour exécuter la commande
 		pid_t pid = fork();
 		if (pid < 0)
@@ -215,29 +186,63 @@ void	open_prompt(char **env)
 		{
 			// Dans le processus parent : attendre la fin de l'exécution de la commande
 			wait(NULL);
-			i = 0;
-			while (arr[i])
+			while (list_str != NULL)
 			{
+				printf("l'element est : %s\n", list_str->str);
+				if (strcmp(list_str->str, "env") == 0)
+				{
+					showboxes(list);
+					printf("111111111111111111111\n");
+				}
+
+				/*if (list_str->type == 's')
+				{
+					printf("affiche un message d'erreur");
+					return ;
+				}*/
+				if (list_str->type == 'g' &&  res_equ(list_str->str, '=') != 0)  // on recupere le type pour faire expand_var sinon ca cree un noeud (une box) vide avec =
+				{
+					list = list_var(list, list_str->str);
+					//showboxes(list);
 				
-				if (ft_strncmp(arr[i], "cd", ft_strlen(str)) == 0)
-					builtins_cd(arr[i + 1]);
-				if (ft_strncmp(arr[i], "pwd", ft_strlen(str)) == 0)
+				}
+				//printf("%s\n", list_str->str);
+				list_str=list_str->next;
+			}
+		}
+		list_str = ft_list(arr);
+		printf("La liste sans les arguments avec '=' :\n");
+		listf = del_elm(list_str);
+		print_list(listf);
+		listp = del_pipe(listf);
+		printf("suppression des pipes\n");
+		print_list(listp);
+		exec = rep_dol(listp, list);
+		printf ("La liste avec remplacement du $ avec le contenu de la variable: \n");
+		print_list(exec);
+		while (exec!= NULL)
+			{
+				if (strcmp(exec->str, "cd") == 0)
+					builtins_cd(exec->next->str);
+				if (strcmp(exec->str, "pwd") == 0)
 					builtins_pwd();
 				// ENV DOIT ETRE AU DEBUT DE ARR[i] OU BIEN APRES UN PIPE
-				if (ft_strncmp(arr[i], "env", ft_strlen(str)) == 0)
-					builtins_env(env);
-				if ((ft_strncmp(arr[i], "echo", ft_strlen(str)) == 0) && (ft_strncmp(arr[i + 1], "-n", ft_strlen(str)) == 0))
-					builtins_echo(arr[i + 2]);
-				if (arr[i][0] == '$')
+				/*if (ft_strncmp(ist_str->str, "env") == 0)
+					builtins_env(env);*/
+				if ((strcmp(exec->str, "echo") == 0) && (strcmp(exec->next->str, "-n") == 0))
 				{
-				 	expand(arr[i]);
+					printf("execution de la commande echo -n \n");
+					builtins_echo_n(exec->next->next->str);
 				}
-						
-				i++;
+				if (strcmp(exec->str, "echo") == 0)
+				{
+					printf("execution de la commande echo \n");
+					builtins_echo(exec->next->str);
+				}
+				exec=exec->next;
 			}
-			list_expand(list(arr));
-		}
-	}
+			
+	}	
 }
 
 int	main(int argc, char *argv[], char **env)

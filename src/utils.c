@@ -6,11 +6,11 @@
 /*   By: mdoan <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 14:56:10 by mdoan             #+#    #+#             */
-/*   Updated: 2024/04/23 11:06:44 by mdoan            ###   ########.fr       */
+/*   Updated: 2024/04/26 16:36:36 by mdoan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "minishell.h"
 
 int	ft_strncmp(const char *s1, const char *s2, size_t n)
 {
@@ -148,4 +148,40 @@ void	*ft_memmove(void *dest, void *src, size_t n)
 		}
 	}
 	return (dest);
+}
+
+int	res_equ(char *s, char c)
+{
+	int	i;
+
+	i = 0;
+	while (i <= (int)ft_strlen(s))
+	{
+		if (s[i] == c)
+			return (i);
+		i++;
+	}
+	return (0);
+}
+
+char	*ft_strdup(const char *s)
+{
+	int		i;
+	int		mysi;
+	char	*mydest;
+
+	i = 0;
+	mysi = (ft_strlen((char *)s) * sizeof(char)) + 1;
+	if (mysi > 2147483647)
+		return (NULL);
+	mydest = malloc(mysi);
+	if (mydest == NULL)
+		return (NULL);
+	while (s[i] != '\0')
+	{
+		mydest[i] = s[i];
+		i++;
+	}
+	mydest[i] = '\0';
+	return (mydest);
 }

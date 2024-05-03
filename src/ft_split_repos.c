@@ -6,11 +6,11 @@
 /*   By: mdoan <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 16:16:49 by mdoan             #+#    #+#             */
-/*   Updated: 2024/04/23 11:06:27 by mdoan            ###   ########.fr       */
+/*   Updated: 2024/04/19 16:17:12 by mdoan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "minishell.h"
 
 static int	totlin(char const *s, char c)
 {

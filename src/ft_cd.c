@@ -6,11 +6,11 @@
 /*   By: mdoan <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 16:33:53 by mdoan             #+#    #+#             */
-/*   Updated: 2024/04/23 11:06:24 by mdoan            ###   ########.fr       */
+/*   Updated: 2024/04/20 11:08:57 by mdoan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "minishell.h"
 
 char	**create_repos(void)
 {

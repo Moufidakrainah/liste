@@ -6,7 +6,7 @@
 /*   By: mdoan <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/29 10:45:31 by mdoan             #+#    #+#             */
-/*   Updated: 2024/04/23 14:39:42 by mdoan            ###   ########.fr       */
+/*   Updated: 2024/04/26 11:49:09 by mdoan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static int	totlin(char const *s)
 	int		begin;
 	int		lin;
 	int		i;
-	int		j;
+	// int		j;
 	int		first_quote;
 
 	begin = 0;
@@ -33,11 +33,11 @@ static int	totlin(char const *s)
 			begin = 0;
 			lin++;
 		}
-		else if (s[i] == '=')
+		/*else if (s[i] == '=')
 		{
 			begin = 0;
 			lin++;
-		}
+		}*/
 		else if (s[i] == ';')
 		{
 			begin = 0;
@@ -65,7 +65,7 @@ static int	totlin(char const *s)
 			lin++;
 			i++;
 		}
-		else if (s[i] == '\'' && first_quote == -1)
+		/*else if (s[i] == '\'' && first_quote == -1)
 		{
 			begin = 0;
 			first_quote = i;
@@ -74,7 +74,7 @@ static int	totlin(char const *s)
 			{
 				if (s[j] == '\'')
 				{
-					lin++;
+					// lin++;
 					first_quote = -1;
 					i = j;
 					break ;
@@ -91,14 +91,14 @@ static int	totlin(char const *s)
 			{
 				if (s[j] == '\"')
 				{
-					lin++;
+					// lin++;
 					first_quote = -1;
 					i = j;
 					break ;
 				}
 				j++;
 			}
-		}
+		}*/
 		else if (s[i] != ' ' && s[i] != '|' && begin == 0)
 		{
 			begin++;
@@ -140,7 +140,7 @@ static char	*pip(void)
 	col[1] = '\0';
 	return (col);
 }
-
+/*
 static char	*ega(void)
 {
 	char	*col;
@@ -152,7 +152,7 @@ static char	*ega(void)
 	col[1] = '\0';
 	return (col);
 }
-
+*/
 static char	*pov(void)
 {
 	char	*col;
@@ -214,6 +214,7 @@ static char	*app(void)
 	col[2] = '\0';
 	return (col);
 }
+
 static int	mymalloc(char **arr, int clin)
 {
 	int	i;
@@ -245,16 +246,16 @@ static char	**fill(char const *s, char **arr, size_t clin)
 	first_quote = -1;
 	while (k <= ft_strlen(s))
 	{
-		if (s[k] == '\"' && first_quote == -1)
+		if (s[k] == '\"')
 		{
 			j = k;
-			first_quote = k;
+			// first_quote = k;
 			j++;
 			while (s[j])
 			{
 				if (s[j] == '\"')
 				{
-					arr[clin] = totcol(s, k, j + 1);
+					arr[clin] = totcol(s, begin, j + 1);
 					if (mymalloc (arr, clin) == 0)
 						return (NULL);	
 					clin++;
@@ -268,13 +269,13 @@ static char	**fill(char const *s, char **arr, size_t clin)
 		else if (s[k] == '\'' && first_quote == -1)
 		{
 			j = k;
-			first_quote = k;
+			// first_quote = k;
 			j++;
 			while (s[j])
 			{
 				if (s[j] == '\'')
 				{
-					arr[clin] = totcol(s, k, j + 1);
+					arr[clin] = totcol(s, begin, j + 1);
 					if (mymalloc (arr, clin) == 0)
 						return (NULL);	
 					clin++;
@@ -311,7 +312,7 @@ static char	**fill(char const *s, char **arr, size_t clin)
 			clin++;
 			begin = -42;
 		}
-		else if (s[k] == '=' && begin != -42)
+		/*else if (s[k] == '=' && begin != -42)
 		{
 			arr[clin] = totcol(s, begin, k);
 			clin++;
@@ -321,6 +322,14 @@ static char	**fill(char const *s, char **arr, size_t clin)
 			clin++;
 			begin = -42;
 		}
+		else if (s[k] == '=')
+		{
+			arr[clin] = ega();
+			if (mymalloc (arr, clin) == 0)
+				return (NULL);
+			clin++;
+			begin = -42;
+		}*/
 		else if (s[k] == '|' && begin != -42)
 		{
 			arr[clin] = totcol(s, begin, k);
