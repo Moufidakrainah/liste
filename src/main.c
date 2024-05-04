@@ -188,11 +188,11 @@ void	open_prompt(char **env)
 			wait(NULL);
 			while (list_str != NULL)
 			{
-				printf("l'element est : %s\n", list_str->str);
+				
 				if (strcmp(list_str->str, "env") == 0)
 				{
 					showboxes(list);
-					printf("111111111111111111111\n");
+		
 				}
 
 				/*if (list_str->type == 's')

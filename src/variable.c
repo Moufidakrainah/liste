@@ -81,56 +81,6 @@ t_box *list_var(t_box *first, char *arr_env)
     return (first);
 }
 
-/*t_entry   *del_elm(t_entry *first)
-{
-    t_entry   *temp;
-    t_entry   *p;
-    t_entry     *head;
-    if (first != NULL)
-    {
-        if (res_equ(first->str, '=') != 0 && first->next == NULL)
-        {
-            p = first;
-            first = first->next;
-            free(p);
-        }
-        if (res_equ(first->str, '=') != 0 && first->next != NULL && first->next->next != NULL)
-        {
-            p = first;
-            first = first->next;
-            free(p);
-            p = first;
-            first = first->next;
-            free(p);
-            continue;
-        }
-        else 
-        {
-            temp = first;
-            while (temp->next != NULL && res_equ(temp->next->str, '=') == 0)
-            temp = temp->next;
-            if (temp->next != NULL && temp->next->next != NULL ) 
-            {
-                p = temp->next;
-                temp->next = temp->next->next;
-                free(p);
-                p = temp->next;
-                temp->next = temp->next->next;
-                free(p);
-
-            }
-            else if (temp->next != NULL && temp->next->next == NULL )  
-            {
-                p = temp->next;
-                temp->next = temp->next->next;
-                free(p);
-            }
-        }  
-
-    }
-    return(first);
-}*/
-
 t_entry   *del_elm(t_entry *first)
 {
     t_entry   *p =first;
@@ -143,7 +93,6 @@ t_entry   *del_elm(t_entry *first)
             
             prev = &(p->next);
             p = p->next;
-            printf("pas de = \n");
         }
 
         if(p) 
@@ -152,9 +101,7 @@ t_entry   *del_elm(t_entry *first)
             *prev = p->next;
             free(p);
             p= *prev;
-            printf("ya un egal\n");
-        } 
-        printf ("on boucle\n"); 
+        }  
 
     }
     return(first);
@@ -167,12 +114,19 @@ t_entry *del_pipe(t_entry *first)
 
     while (p)
     {
+        while (p && (p->str[0] == '|') && (p->pr == NULL))
+        {
+            printf("11111\n");
+            *prev = p->next;
+            free(p);
+            p= *prev;
+        }
         while (p && p->str[0] != '|')
         {
             
+            printf("22222\n");
             prev = &(p->next);
             p = p->next;
-            printf("pas de pipe \n");
         }
 
         if(p) 
@@ -180,29 +134,25 @@ t_entry *del_pipe(t_entry *first)
             
             if ((p->next) && (p->next->str[0] == '|'))
             {
+                  printf("33333\n");
                 *prev = p->next;
                 free(p);
                 p= *prev;
-                printf("ya un pipe\n");
-
             }
             else if (p->next == NULL)
             {
+        
                 *prev = p->next;
                 free(p);
                 p= *prev;
-                printf("ya un pipe\n");
-
             }
             else
             {
+                  printf("55555\n");
                 prev = &(p->next);
                 p = p->next;
-                printf ("c'est le dernier pipe");
             }
         } 
-        printf ("on boucle\n"); 
-
     }
     return(first);
 }

@@ -36,7 +36,14 @@ typedef struct s_entry
 	char			*str;
 	char			type;
 	struct s_entry	*next;
+	struct s_pipe	*pr;
 }	t_entry;
+
+typedef struct s_pipe
+{
+	char			*str;
+	struct s_pipe	*next;
+}	t_pipe;
 
 typedef struct s_repos
 {
